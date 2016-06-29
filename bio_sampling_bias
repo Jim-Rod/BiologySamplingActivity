@@ -1,0 +1,45 @@
+# Create an A1 sized plot with random dots.
+# to be used as exercise for y11 Biology
+# topic: sampling techniques.
+# This set will have a bias toward one end of the plot.
+# Thanks to @timl
+
+import matplotlib.pyplot as plt
+import numpy as np
+from numpy.random import rand
+
+X_MAX = 10
+Y_MAX = 10
+
+# Make figure aprox A1 size
+plt.figure(figsize=(16.5,11.7), dpi=80)
+plt.xlim(0, X_MAX)
+plt.ylim(0, Y_MAX)
+plt.ymin, plt.ymax = 0, Y_MAX
+
+# Make the data
+data = [('green', 1000, 100, 0.5, 'none', False),
+        ('blue', 1000, 100, 0.5, 'none', False),
+        ('red', 500, 200, 1, 'black', True)]
+
+for (color, n, scale, alpha, edgecolors, transform) in data:
+    x, y = rand(2, n)
+    x *= X_MAX
+    if transform:
+        # Distribution is kind of like 1/(Y_MAX - y)
+        y = Y_MAX - y*np.linspace(0, Y_MAX, n)
+    else:
+        # Standard linear distribution
+        y *= Y_MAX
+    s = scale * rand(n)
+    plt.scatter(x, y, c=color, s=s, label=color,
+                alpha=alpha, edgecolors=edgecolors)
+
+# Set up the grid etc
+plt.legend()
+plt.grid(False)
+plt.xticks(np.arange(0, X_MAX, 0.5))
+plt.yticks(np.arange(0, Y_MAX, 0.5))
+
+# save it
+plt.savefig('plot_bias.pdf', bbox_inches='tight')
